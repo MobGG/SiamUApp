@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/siamu_logo"/>
+
+    <ImageButton
+        android:id="@+id/mapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/logo"
+        android:background="@android:color/transparent"
+        android:src="@drawable/new_map_button" />
+
+    <ImageButton
+        android:id="@+id/peopleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/mapButton"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:src="@drawable/new_people_button" />
+
+    <ImageButton
+        android:id="@+id/missingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/peopleButton"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:src="@drawable/new_item_button" />
+
+</RelativeLayout>
