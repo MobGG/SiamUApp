@@ -133,7 +133,7 @@
                     android:layout_marginRight="16dp"
                     android:ems="10"
                     android:inputType="textMultiLine"
-                    android:maxLength="2500" />
+                    android:maxLength="250" />
             </LinearLayout>
 
             <LinearLayout

@@ -3,26 +3,27 @@ apply plugin: 'com.android.application'
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://ksoap2-android.googlecode.com/svn/m2-repo' }
+        maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-        classpath 'com.google.code.ksoap2-android:ksoap2-android:3.1.1'
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
     }
 }
 
 repositories {
-    maven { url 'http://ksoap2-android.googlecode.com/svn/m2-repo' }
+    maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
 }
 
+
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.0 rc2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "edu.siam.siamumap"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -36,9 +37,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.google.android.gms:play-services:8.1.0'
-    compile 'com.google.code.ksoap2-android:ksoap2-android:3.1.1'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.android.support:design:23.0.0'
+    compile 'com.google.android.gms:play-services-maps:9.0.2'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
+    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
 }

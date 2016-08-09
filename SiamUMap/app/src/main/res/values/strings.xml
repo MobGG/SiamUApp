@@ -4,7 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="tvName">ชื่ออาจารย์ :</string>
-    <string name="tvFaculty">คณะ :</string>
+    <string name="tvFaculty">คณะ : </string>
+    <string name="tvDepartment">สาขา :</string>
     <string name="btnSearch">ค้นหา</string>
     <string name="btnClear">ยกเลิก</string>
     <string name="tvTopic">ชื่อกระทู้ :</string>
@@ -30,6 +31,7 @@
     <string name="people_image">people_image</string>
     <string name="people_name">Name</string>
     <string name="people_faculty">Faculty</string>
+    <string name="people_department">Department</string>
     <string name="open_location_settings">เปิด</string>
     <string name="cancel">ไม่</string>
 

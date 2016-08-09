@@ -7,8 +7,13 @@ public class People {
     protected String peopleID;
     protected String peopleName;
     protected String peopleFaculty;
+    protected String peopleDepartment;
+    protected String peopleBuilding;
     protected String peopleRoom;
+    protected String peopleEmail;
+    protected String peopleTel;
     protected String peopleImage;
+
 
     public String getPeopleID() {
         return peopleID;
@@ -48,5 +53,37 @@ public class People {
 
     public void setPeopleImage(String peopleImage) {
         this.peopleImage = peopleImage;
+    }
+
+    public String getPeopleDepartment() {
+        return peopleDepartment;
+    }
+
+    public void setPeopleDepartment(String peopleDepartment) {
+        this.peopleDepartment = peopleDepartment;
+    }
+
+    public String getPeopleBuilding() {
+        return peopleBuilding;
+    }
+
+    public void setPeopleBuilding(String peopleBuilding) {
+        this.peopleBuilding = peopleBuilding;
+    }
+
+    public String getPeopleEmail() {
+        return peopleEmail;
+    }
+
+    public void setPeopleEmail(String peopleEmail) {
+        this.peopleEmail = peopleEmail;
+    }
+
+    public String getPeopleTel() {
+        return peopleTel;
+    }
+
+    public void setPeopleTel(String peopleTel) {
+        this.peopleTel = peopleTel;
     }
 }

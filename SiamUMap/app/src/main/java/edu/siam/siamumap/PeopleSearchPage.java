@@ -13,8 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-
-import android.os.StrictMode;
 import android.widget.TextView;
 
 import org.ksoap2.*;
@@ -26,8 +24,10 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import siamumap.adaptor.DepartmentSpinnerAdapter;
 import siamumap.adaptor.FacultySpinnerAdapter;
 import siamumap.adaptor.PeopleCustomAdapter;
+import siamumap.dto.Department;
 import siamumap.dto.Faculty;
 import siamumap.dto.People;
 
@@ -44,15 +44,18 @@ public class PeopleSearchPage extends ActionBarActivity {
     private static String soapAction;
     //criteria
     private String peopleName;
-    private String spinnerID;
+    private String facultyID;
+    private String departmentID;
     //dto
     private FacultySpinnerAdapter facultySpinnerAdapter;
+    private DepartmentSpinnerAdapter departmentSpinnerAdapter;
     private ArrayList<Faculty> faculties = new ArrayList<Faculty>();
+    private ArrayList<Department> departments = new ArrayList<Department>();
     private ArrayList<People> people = new ArrayList<People>();
     //android
     View criteria;
     EditText txtName;
-    Spinner spinnerFaculty;
+    Spinner spinnerFaculty, spinnerDepartment;
     Button btnSearch, btnClear;
     ListView listOfPeople;
 
@@ -69,27 +72,41 @@ public class PeopleSearchPage extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         appMethod.openPermisson();
-
         //binding android part to java
         criteria = (View) findViewById(R.id.criteria);
         txtName = (EditText) findViewById(R.id.txtName);
-        spinnerFaculty = (Spinner) findViewById(R.id.spinnerMajor);
+        spinnerFaculty = (Spinner) findViewById(R.id.spinnerFaculty);
+        spinnerDepartment = (Spinner) findViewById(R.id.spinnerDepartment);
         btnSearch = (Button) findViewById(R.id.btnSearch);
         btnClear = (Button) findViewById(R.id.btnClear);
         listOfPeople = (ListView) findViewById(R.id.listOfPeople);
 
         new getFacultySpinnerData().execute();
+
         spinnerFaculty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
-                spinnerID = ((TextView) v.findViewById(R.id.spinnerID)).getText().toString();
+                facultyID = ((TextView) v.findViewById(R.id.spinnerID)).getText().toString();
 //                String spinnerValue = ((TextView) v.findViewById(R.id.spinnerValue)).getText().toString();
+                new getDepartmentSpinnerData().execute();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
+        spinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
+                departmentID = ((TextView) v.findViewById(R.id.id)).getText().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                return;
+            }
+        });
+
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,7 +185,6 @@ public class PeopleSearchPage extends ActionBarActivity {
                     SoapObject responseChild = (SoapObject) response.getProperty(i);
                     faculty.setFacultyID(responseChild.getPropertyAsString("facultyID"));
                     faculty.setFacultyName(responseChild.getPropertyAsString("facultyName"));
-                    faculty.setStatusID(responseChild.getPropertyAsString("statusID"));
                     faculties.add(faculty);
                 }
             } catch (Exception e) {
@@ -185,13 +201,75 @@ public class PeopleSearchPage extends ActionBarActivity {
         }
     }
 
+    private class getDepartmentSpinnerData extends AsyncTask<Void, Integer, Void> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            methodName = "findDepartmentByFacultyAndStatus";
+            soapAction = "http://siamUMapService.org/findDepartmentByFacultyAndStatus";
+            departmentSpinnerAdapter = null;
+            departments = new ArrayList<Department>();
+
+            progressDialog = appMethod.createProgressDialog(PeopleSearchPage.this);
+            progressDialog.setMessage("กำลังเตรียมข้อมูลสาขาทั้งหมด... ");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            SoapObject request = new SoapObject(namespace, methodName);
+
+            PropertyInfo propertyInfo = new PropertyInfo();
+            propertyInfo.setName("facultyID");
+            propertyInfo.setType(String.class);
+            propertyInfo.setValue(facultyID);
+            request.addProperty(propertyInfo);
+
+            SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            soapEnvelope.dotNet = true;
+            soapEnvelope.setOutputSoapObject(request);
+
+            HttpTransportSE aht = new HttpTransportSE(webserviceURL);
+            aht.debug = true;
+            try {
+                aht.call(soapAction, soapEnvelope);
+                SoapObject response = (SoapObject) soapEnvelope.getResponse();
+                int count = response.getPropertyCount();
+
+                Department department = new Department();
+                department.setDepartmentName("เลือกทั้งหมด");
+                departments.add(department);
+                for (int i = 0; i < count; i++) {
+                    HashMap<String, String> mapping = new HashMap<String, String>();
+                    department = new Department();
+                    SoapObject responseChild = (SoapObject) response.getProperty(i);
+                    department.setDepartmentId(responseChild.getPropertyAsString("departmentID"));
+                    department.setDepartmentName(responseChild.getPropertyAsString("departmentName"));
+                    department.setFacultyId(responseChild.getPropertyAsString("statusID"));
+                    departments.add(department);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void something) {
+            progressDialog.dismiss();
+            departmentSpinnerAdapter = new DepartmentSpinnerAdapter(getApplicationContext(), R.layout.custom_department_spinner, departments);
+            spinnerDepartment.setAdapter(departmentSpinnerAdapter);
+        }
+    }
+
     private class getPeopleData extends AsyncTask<Void, Integer, Void> {
         ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
-            methodName = "findPeopleByCriteria";
-            soapAction = "http://siamUMapService.org/findPeopleByCriteria";
+            methodName = "findStaffByCriteria";
+            soapAction = "http://siamUMapService.org/findStaffByCriteria";
             peopleName = txtName.getText().toString();
             people = new ArrayList<People>();
 
@@ -213,14 +291,20 @@ public class PeopleSearchPage extends ActionBarActivity {
             propertyInfo = new PropertyInfo();
             propertyInfo.setName("facultyId");
             propertyInfo.setType(String.class);
-            propertyInfo.setValue(spinnerID);
+            propertyInfo.setValue(facultyID);
+            request.addProperty(propertyInfo);
+
+            propertyInfo = new PropertyInfo();
+            propertyInfo.setName("departmentId");
+            propertyInfo.setType(String.class);
+            propertyInfo.setValue(departmentID);
             request.addProperty(propertyInfo);
 
             SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.dotNet = true;
             soapEnvelope.setOutputSoapObject(request);
 
-            HttpTransportSE aht = new HttpTransportSE(webserviceURL);// aht = androidHttpTransport
+            HttpTransportSE aht = new HttpTransportSE(webserviceURL);
             aht.debug = true;
             try {
                 aht.call(soapAction, soapEnvelope);
@@ -233,6 +317,7 @@ public class PeopleSearchPage extends ActionBarActivity {
                     person.setPeopleID(responseChild.getPropertyAsString("userId"));
                     person.setPeopleName(responseChild.getPropertyAsString("name"));
                     person.setPeopleFaculty(responseChild.getPropertyAsString("facultyName"));
+                    person.setPeopleDepartment(responseChild.getPropertyAsString("departmentName"));
                     if (responseChild.hasProperty("picture")) {
                         person.setPeopleImage(responseChild.getPropertyAsString("picture"));
                     }

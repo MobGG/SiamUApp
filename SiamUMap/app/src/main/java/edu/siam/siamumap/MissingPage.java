@@ -1,19 +1,23 @@
 package edu.siam.siamumap;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,20 +28,22 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
+import edu.siam.siamumap.MyDatePicker.DatePickerFragment;
 import siamumap.adaptor.BuildingSpinnerAdapter;
-import siamumap.adaptor.CustomAdapter;
-import siamumap.adaptor.DurationSpinnerAdapter;
+import siamumap.adaptor.MissingItemCustomAdapter;
 import siamumap.dto.Building;
-import siamumap.dto.Duration;
 import siamumap.dto.Post;
 
 /**
  * Created by Mob on 27-Sep-15.
  */
-public class MissingPage extends ActionBarActivity {
+public class MissingPage extends ActionBarActivity implements DatePickerFragment.TheListener {
     AppMethod appMethod = new AppMethod();
 
     private final String webserviceURL = appMethod.setWebserviceURL();
@@ -47,18 +53,17 @@ public class MissingPage extends ActionBarActivity {
 
     private String title;
     private String spinnerID;
-    private String duration;
 
     BuildingSpinnerAdapter buildingSpinnerAdapter;
-    DurationSpinnerAdapter durationSpinnerAdapter;
+
     private ArrayList<Building> buildings = new ArrayList<Building>();
-    private ArrayList<Duration> durations = new ArrayList<Duration>();
     private ArrayList<Post> posts = new ArrayList<Post>();
 
     View criteria;
-    EditText txtTopic;
-    Spinner spinnerBuilding, spinnerDuration;
+    EditText txtTopic, txtStartDate, txtEndDate;
+    Spinner spinnerBuilding;
     Button btnSearch, btnClear;
+    ImageButton btnStart, btnEnd;
     ListView missingListView;
     FloatingActionButton btnAdd;
 
@@ -78,10 +83,16 @@ public class MissingPage extends ActionBarActivity {
 
         criteria = (View) findViewById(R.id.criteria);
         txtTopic = (EditText) findViewById(R.id.txtTopic);
+        txtStartDate = (EditText) findViewById(R.id.startDate);
+        txtEndDate = (EditText) findViewById(R.id.endDate);
+
         spinnerBuilding = (Spinner) findViewById(R.id.ddPlace);
-        spinnerDuration = (Spinner) findViewById(R.id.ddDuration);
         btnSearch = (Button) findViewById(R.id.btnSearch);
         btnClear = (Button) findViewById(R.id.btnClear);
+
+        btnStart = (ImageButton) findViewById(R.id.btnStartDate);
+        btnEnd = (ImageButton) findViewById(R.id.btnEndDate);
+
         missingListView = (ListView) findViewById(R.id.listOfMissing);
         btnAdd = (FloatingActionButton) findViewById(R.id.fabAddButton);
 
@@ -92,20 +103,7 @@ public class MissingPage extends ActionBarActivity {
         spinnerBuilding.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
-                // Get selected row data to show on screen
                 spinnerID = ((TextView) v.findViewById(R.id.buildingNo)).getText().toString();
-//                String spinnerValue = ((TextView) v.findViewById(R.id.buildingDescription)).getText().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-        });
-
-        spinnerDuration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
-                duration = ((TextView) v.findViewById(R.id.id)).getText().toString();
             }
 
             @Override
@@ -162,6 +160,31 @@ public class MissingPage extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void pickStartDate(View v) {
+        DatePickerFragment startFragment = new DatePickerFragment();
+        startFragment.setFlag(DatePickerFragment.startDate);
+        startFragment.show(getSupportFragmentManager(), "datePicker");
+
+    }
+
+    public void pickEndDate(View v) {
+//        DialogFragment newFragment = new DatePickerFragment();
+//        newFragment.show(getSupportFragmentManager(), "pickEndDate");
+        DatePickerFragment startFragment = new DatePickerFragment();
+        startFragment.setFlag(DatePickerFragment.endDate);
+        startFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void returnStartDate(String date) {
+        txtStartDate.setText(date);
+    }
+
+    @Override
+    public void returnEndDate(String date) {
+        txtEndDate.setText(date);
+    }
+
     private class getBuildingSpinnerData extends AsyncTask<Void, Integer, Void> {
         ProgressDialog progressDialog;
 
@@ -201,20 +224,6 @@ public class MissingPage extends ActionBarActivity {
                     building.setBuildingDescription(responseChild.getPropertyAsString("description"));
                     buildings.add(building);
                 }
-
-                Duration duration = new Duration();
-                duration.setId("today");
-                duration.setValue("วันนี้");
-                durations.add(duration);
-                duration = new Duration();
-                duration.setId("week");
-                duration.setValue("สัปดาห์ที่ผ่านมา");
-                durations.add(duration);
-                duration = new Duration();
-                duration.setId("month");
-                duration.setValue("เดือนที่ผ่านมา");
-                durations.add(duration);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -226,9 +235,6 @@ public class MissingPage extends ActionBarActivity {
             progressDialog.dismiss();
             buildingSpinnerAdapter = new BuildingSpinnerAdapter(getApplicationContext(), R.layout.custom_building_spinner, buildings);
             spinnerBuilding.setAdapter(buildingSpinnerAdapter);
-
-            durationSpinnerAdapter = new DurationSpinnerAdapter(getApplicationContext(), R.layout.custom_duration_spinner, durations);
-            spinnerDuration.setAdapter(durationSpinnerAdapter);
 
             new getTopicData().execute();
         }
@@ -265,11 +271,20 @@ public class MissingPage extends ActionBarActivity {
             propertyInfo.setValue(spinnerID);
             request.addProperty(propertyInfo);
 
+
+            // TODO: 8/5/2016 add 2 propertyInfo startDate,endDate to criteria
             propertyInfo = new PropertyInfo();
-            propertyInfo.setName("duration");
-            propertyInfo.setType(String.class);
-            propertyInfo.setValue(duration);
+            propertyInfo.setName("startDate");
+            propertyInfo.setType(Date.class);
+            propertyInfo.setValue(null);
             request.addProperty(propertyInfo);
+
+            propertyInfo = new PropertyInfo();
+            propertyInfo.setName("endDate");
+            propertyInfo.setType(Date.class);
+            propertyInfo.setValue(null);
+            request.addProperty(propertyInfo);
+
 
             SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.dotNet = true;
@@ -302,8 +317,8 @@ public class MissingPage extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void something) {
-            CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), posts);
-            missingListView.setAdapter(customAdapter);
+            MissingItemCustomAdapter missingItemCustomAdapter = new MissingItemCustomAdapter(getApplicationContext(), posts);
+            missingListView.setAdapter(missingItemCustomAdapter);
 
             TextView empty = (TextView) findViewById(R.id.empty);
             missingListView.setEmptyView(empty);

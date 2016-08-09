@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/people_image" />
 
     <TextView
@@ -24,7 +24,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_toLeftOf="@+id/people_faculty"
         android:text="Loading..."
         android:visibility="invisible" />
 
@@ -62,11 +63,21 @@
         android:layout_marginTop="8dp"
         android:text="@string/people_faculty" />
 
+    <TextView
+        android:id="@+id/people_department"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/people_name"
+        android:layout_alignStart="@+id/people_name"
+        android:layout_below="@+id/people_faculty"
+        android:layout_marginTop="8dp"
+        android:text="@string/people_department" />
+
     <View
         android:id="@+id/cutLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/people_image"
+        android:layout_below="@+id/people_department"
         android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray" />
 

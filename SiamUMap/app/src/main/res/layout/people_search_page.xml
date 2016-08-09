@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:descendantFocusability="beforeDescendants"
-
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -50,7 +49,28 @@
                 android:text="@string/tvFaculty" />
 
             <Spinner
-                android:id="@+id/spinnerMajor"
+                android:id="@+id/spinnerFaculty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/spinner_bg" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvDepartment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="@string/tvDepartment" />
+
+            <Spinner
+                android:id="@+id/spinnerDepartment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
@@ -72,6 +92,7 @@
                 android:background="@drawable/button_shape"
                 android:text="@string/btnSearch"
                 android:textColor="@color/white"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <Button
@@ -81,6 +102,7 @@
                 android:background="@drawable/button_shape"
                 android:text="@string/btnClear"
                 android:textColor="@color/white"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -104,6 +126,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:text="ไม่พบข้อมูลที่ต้องการ" />
+        android:text="ไม่พบข้อมูลที่ต้องการ"
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
 </LinearLayout>

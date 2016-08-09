@@ -11,21 +11,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import edu.siam.siamumap.R;
-import siamumap.dto.Faculty;
-
+import siamumap.dto.Department;
 
 /**
- * Created by Mob on 14-Dec-15.
+ * Created by Mob on 13-Jan-16.
  */
-public class FacultySpinnerAdapter extends ArrayAdapter<String> {
-
-    Faculty faculty = null;
+public class DepartmentSpinnerAdapter extends ArrayAdapter<String> {
+    Department department;
     private Context context;
     private ArrayList spinnerData;
     LayoutInflater inflater;
 
-    public FacultySpinnerAdapter(Context context, int itemLayoutId, ArrayList spinnerData) {
-        super(context, itemLayoutId, spinnerData);
+    public DepartmentSpinnerAdapter(Context context, int itemLayoutID, ArrayList spinnerData) {
+        super(context, itemLayoutID, spinnerData);
         this.context = context;
         this.spinnerData = spinnerData;
 
@@ -43,19 +41,16 @@ public class FacultySpinnerAdapter extends ArrayAdapter<String> {
     }
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
+        View row = inflater.inflate(R.layout.custom_department_spinner, parent, false);
 
-        /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
-        View row = inflater.inflate(R.layout.custom_faculty_spinner, parent, false);
+        department = (Department) spinnerData.get(position);
 
-        /***** Get each Model object from Arraylist ********/
-        faculty = (Faculty) spinnerData.get(position);
-
-        TextView id = (TextView) row.findViewById(R.id.spinnerID);
-        TextView value = (TextView) row.findViewById(R.id.spinnerValue);
+        TextView id = (TextView) row.findViewById(R.id.id);
+        TextView value = (TextView) row.findViewById(R.id.value);
         value.setTextColor(Color.parseColor("#000000"));
 
-        id.setText(faculty.getFacultyID());
-        value.setText(faculty.getFacultyName());
+        id.setText(department.getDepartmentId());
+        value.setText(department.getDepartmentName());
         return row;
     }
 }

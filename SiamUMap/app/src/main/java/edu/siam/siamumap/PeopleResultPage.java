@@ -35,7 +35,7 @@ public class PeopleResultPage extends ActionBarActivity {
     private People people = new People();
 
     ImageView imageView;
-    TextView nameView, facultyView, roomView;
+    TextView nameView, facultyView, departmentView, buildingView, roomView, telView, emailView;
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -57,7 +57,11 @@ public class PeopleResultPage extends ActionBarActivity {
         imageView = (ImageView) findViewById(R.id.imageView);
         nameView = (TextView) findViewById(R.id.nameView);
         facultyView = (TextView) findViewById(R.id.facultyView);
+        departmentView = (TextView) findViewById(R.id.departmentView);
+        buildingView = (TextView) findViewById(R.id.buildingView);
         roomView = (TextView) findViewById(R.id.roomView);
+        telView = (TextView) findViewById(R.id.telView);
+        emailView = (TextView) findViewById(R.id.emailView);
 
         new getPeopleById().execute();
     }
@@ -103,11 +107,21 @@ public class PeopleResultPage extends ActionBarActivity {
                 SoapObject response = (SoapObject) soapEnvelope.getResponse();
                 people.setPeopleName(response.getPropertyAsString("name"));
                 people.setPeopleFaculty(response.getPropertyAsString("facultyName"));
+                people.setPeopleDepartment(response.getPropertyAsString("departmentName"));
                 if (response.hasProperty("picture")) {
                     people.setPeopleImage(response.getPropertyAsString("picture"));
                 }
+                if (response.hasProperty("buildingNo")) {
+                    people.setPeopleBuilding(response.getPropertyAsString("buildingNo"));
+                }
                 if (response.hasProperty("roomNo")) {
                     people.setPeopleRoom(response.getPropertyAsString("roomNo"));
+                }
+                if (response.hasProperty("telNo")) {
+                    people.setPeopleTel(response.getPropertyAsString("telNo"));
+                }
+                if (response.hasProperty("email")) {
+                    people.setPeopleEmail(response.getPropertyAsString("email"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,6 +135,11 @@ public class PeopleResultPage extends ActionBarActivity {
 
             nameView.setText(people.getPeopleName());
             facultyView.setText(people.getPeopleFaculty());
+            if (people.getPeopleDepartment() == null) {
+                departmentView.setText(people.getPeopleFaculty());
+            } else {
+                departmentView.setText(people.getPeopleDepartment());
+            }
             if (people.getPeopleImage() != null) {
                 byte[] decodedString = Base64.decode(people.getPeopleImage(), Base64.DEFAULT);
                 BitmapFactory.Options options = new BitmapFactory.Options();
@@ -130,10 +149,25 @@ public class PeopleResultPage extends ActionBarActivity {
             } else {
                 imageView.setImageResource(R.drawable.no_picture);
             }
+            if (people.getPeopleBuilding() == null) {
+                buildingView.setText("-");
+            } else {
+                buildingView.setText(people.getPeopleBuilding());
+            }
             if (people.getPeopleRoom() == null) {
                 roomView.setText("ไม่มีห้องพัก");
             } else {
                 roomView.setText(people.getPeopleRoom());
+            }
+            if (people.getPeopleTel() == null) {
+                telView.setText("-");
+            } else {
+                telView.setText(people.getPeopleTel());
+            }
+            if (people.getPeopleEmail() == null) {
+                emailView.setText("-");
+            } else {
+                emailView.setText(people.getPeopleEmail());
             }
         }
     }
