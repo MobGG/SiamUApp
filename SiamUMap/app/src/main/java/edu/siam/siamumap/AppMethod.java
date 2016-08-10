@@ -12,10 +12,6 @@ import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.provider.Settings;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Created by Mob on 24-Dec-15.
  */
@@ -56,27 +52,6 @@ public class AppMethod {
                 sampleSize = Math.round((float) width / (float) reqWidth);
         }
         return sampleSize;
-    }
-
-    public String convertDate(String date) {
-        String day, month, time;
-        int year;
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            Date d = format.parse(date);
-
-            Calendar c = Calendar.getInstance();
-            c.setTime(d);
-            day = new SimpleDateFormat("dd").format(d);
-            month = new SimpleDateFormat("MM").format(d);
-            year = c.get(Calendar.YEAR) + 543;
-            time = new SimpleDateFormat("HH:mm:ss").format(d);
-            String thaiDate = day + "/" + month + "/" + year + " " + time;
-            return thaiDate;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     // check connect or not

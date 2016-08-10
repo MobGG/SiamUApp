@@ -78,7 +78,7 @@ public class MissingItemCustomAdapter extends BaseAdapter {
         myViewHolder.title.setTextColor(Color.parseColor("#000000"));
         myViewHolder.place.setText("อาคาร " + String.valueOf(post.getPostPlace()));
         myViewHolder.place.setTextColor(Color.parseColor("#000000"));
-        myViewHolder.dateTime.setText(appMethod.convertDate(post.getPostDate()));
+        myViewHolder.dateTime.setText(post.getPostDate());
         myViewHolder.dateTime.setTextColor(Color.parseColor("#000000"));
 
         return convertView;

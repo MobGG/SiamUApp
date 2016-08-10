@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
-    xsi:schemaLocation="http://schemas.android.com/tools" >
+    xsi:schemaLocation="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/logo"
@@ -21,33 +21,51 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/siamu_logo" />
 
-    <ImageButton
+    <Button
         android:id="@+id/mapButton"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
         android:layout_centerHorizontal="true"
-        android:background="@android:color/transparent"
-        android:src="@drawable/new_map_button" />
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/button_shape"
+        android:drawableLeft="@drawable/new_location_icon"
+        android:padding="16dp"
+        android:text="แผนที่อาคาร"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
-    <ImageButton
+    <Button
         android:id="@+id/peopleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mapButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@android:color/transparent"
-        android:src="@drawable/new_people_button" />
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/button_shape"
+        android:drawableLeft="@drawable/people_icon"
+        android:padding="16dp"
+        android:text="ข้อมูลอาจารย์"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
-    <ImageButton
+    <Button
         android:id="@+id/missingButton"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/peopleButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:background="@android:color/transparent"
-        android:src="@drawable/new_item_button" />
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/button_shape"
+        android:drawableLeft="@drawable/megaphone_icon"
+        android:padding="16dp"
+        android:text="ข่าวของหาย"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

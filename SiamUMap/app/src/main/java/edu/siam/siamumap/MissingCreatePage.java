@@ -214,7 +214,7 @@ public class MissingCreatePage extends ActionBarActivity {
             buildingSpinnerAdapter = null;
 
             progressDialog = appMethod.createProgressDialog(MissingCreatePage.this);
-            progressDialog.setMessage("กำลังเตรียมข้อมูลอาคารทั้งหมด... ");
+            progressDialog.setMessage("กำลังเตรียมข้อมูลอาคาร... ");
             progressDialog.show();
         }
 
@@ -275,7 +275,7 @@ public class MissingCreatePage extends ActionBarActivity {
         @Override
         protected Void doInBackground(Void... params) {
             Date currentDate = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             dateTime = sdf.format(currentDate);
 
             if (resizeImage != null) {
@@ -311,8 +311,8 @@ public class MissingCreatePage extends ActionBarActivity {
             }
 
             propertyInfo = new PropertyInfo();
-            propertyInfo.setName("dateTime");
-            propertyInfo.setType(Date.class);
+            propertyInfo.setName("strDateTime");
+            propertyInfo.setType(String.class);
             propertyInfo.setValue(dateTime);
             request.addProperty(propertyInfo);
 

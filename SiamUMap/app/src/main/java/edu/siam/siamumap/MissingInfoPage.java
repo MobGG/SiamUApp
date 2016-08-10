@@ -106,7 +106,7 @@ public class MissingInfoPage extends ActionBarActivity {
                 if (response.hasProperty("description")) {
                     post.setPostDescription(response.getPropertyAsString("description"));
                 }
-                post.setPostDate(response.getPropertyAsString("dateTime") + "Z");
+                post.setPostDate(response.getPropertyAsString("dateTime"));
                 if (response.hasProperty("picture")) {
                     post.setPostImage(response.getPropertyAsString("picture"));
                 }
@@ -123,8 +123,12 @@ public class MissingInfoPage extends ActionBarActivity {
 
             getSupportActionBar().setTitle(post.getPostTitle());
             foundLocationView.setText("อาคาร " + String.valueOf(post.getPostPlace()));
-            descriptionView.setText(post.getPostDescription());
-            foundDateView.setText(appMethod.convertDate(post.getPostDate()));
+            if (post.getPostDescription() == null) {
+                descriptionView.setText("ไม่มี");
+            } else {
+                descriptionView.setText(post.getPostDescription());
+            }
+            foundDateView.setText(post.getPostDate());
             if (post.getPostImage() != null) {
                 byte[] decodedString = Base64.decode(post.getPostImage(), Base64.DEFAULT);
                 BitmapFactory.Options options = new BitmapFactory.Options();

@@ -1,13 +1,10 @@
 package edu.siam.siamumap;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -28,6 +24,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,10 +48,10 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
     private static String methodName;
     private static String soapAction;
 
-    private String title;
-    private String spinnerID;
+    private String title, spinnerID, strStartDate, strEndDate;
 
     BuildingSpinnerAdapter buildingSpinnerAdapter;
+    DatePickerFragment startFragment;
 
     private ArrayList<Building> buildings = new ArrayList<Building>();
     private ArrayList<Post> posts = new ArrayList<Post>();
@@ -85,14 +82,11 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
         txtTopic = (EditText) findViewById(R.id.txtTopic);
         txtStartDate = (EditText) findViewById(R.id.startDate);
         txtEndDate = (EditText) findViewById(R.id.endDate);
-
         spinnerBuilding = (Spinner) findViewById(R.id.ddPlace);
         btnSearch = (Button) findViewById(R.id.btnSearch);
         btnClear = (Button) findViewById(R.id.btnClear);
-
         btnStart = (ImageButton) findViewById(R.id.btnStartDate);
         btnEnd = (ImageButton) findViewById(R.id.btnEndDate);
-
         missingListView = (ListView) findViewById(R.id.listOfMissing);
         btnAdd = (FloatingActionButton) findViewById(R.id.fabAddButton);
 
@@ -105,7 +99,6 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
                 spinnerID = ((TextView) v.findViewById(R.id.buildingNo)).getText().toString();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
@@ -123,6 +116,9 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             public void onClick(View v) {
                 txtTopic.setText("");
                 spinnerBuilding.setSelection(0);
+
+                txtStartDate.setText("");
+                txtEndDate.setText("");
             }
         });
 
@@ -161,33 +157,71 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
     }
 
     public void pickStartDate(View v) {
-        DatePickerFragment startFragment = new DatePickerFragment();
+        startFragment = new DatePickerFragment();
         startFragment.setFlag(DatePickerFragment.startDate);
         startFragment.show(getSupportFragmentManager(), "datePicker");
-
     }
 
     public void pickEndDate(View v) {
-//        DialogFragment newFragment = new DatePickerFragment();
-//        newFragment.show(getSupportFragmentManager(), "pickEndDate");
-        DatePickerFragment startFragment = new DatePickerFragment();
+        startFragment = new DatePickerFragment();
         startFragment.setFlag(DatePickerFragment.endDate);
         startFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     @Override
     public void returnStartDate(String date) {
-        txtStartDate.setText(date);
+        Date startDate, endDate;
+        startDate = convertStringToDate(date);
+        endDate = convertStringToDate(strEndDate);
+
+        if (endDate.before(startDate)) {
+            strStartDate = date;
+            txtStartDate.setText(date);
+            strEndDate = date;
+            txtEndDate.setText(date);
+        } else {
+            strStartDate = date;
+            txtStartDate.setText(date);
+        }
     }
 
     @Override
     public void returnEndDate(String date) {
-        txtEndDate.setText(date);
+        Date startDate, endDate;
+        startDate = convertStringToDate(strStartDate);
+        endDate = convertStringToDate(date);
+
+        if (startDate.after(endDate)) {
+            strStartDate = date;
+            txtStartDate.setText(date);
+            strEndDate = date;
+            txtEndDate.setText(date);
+        } else {
+            strEndDate = date;
+            txtEndDate.setText(date);
+        }
+    }
+
+    private String getCurrentDate() {
+        Date currentDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String date = sdf.format(currentDate);
+        return  date;
+    }
+
+    private Date convertStringToDate(String strDate) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date convertDate = sdf.parse(strDate);
+            return convertDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private class getBuildingSpinnerData extends AsyncTask<Void, Integer, Void> {
         ProgressDialog progressDialog;
-
         @Override
         protected void onPreExecute() {
             methodName = "findAllBuilding";
@@ -198,7 +232,6 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             progressDialog.setMessage("กำลังเตรียมข้อมูลอาคาร... ");
             progressDialog.show();
         }
-
         @Override
         protected Void doInBackground(Void... params) {
             SoapObject request = new SoapObject(namespace, methodName);
@@ -229,20 +262,22 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void something) {
             progressDialog.dismiss();
             buildingSpinnerAdapter = new BuildingSpinnerAdapter(getApplicationContext(), R.layout.custom_building_spinner, buildings);
             spinnerBuilding.setAdapter(buildingSpinnerAdapter);
 
+            strStartDate = getCurrentDate();
+            txtStartDate.setText(getCurrentDate());
+            strEndDate = getCurrentDate();
+            txtEndDate.setText(getCurrentDate());
             new getTopicData().execute();
         }
     }
 
     private class getTopicData extends AsyncTask<Void, Integer, Void> {
         ProgressDialog progressDialog;
-
         @Override
         protected void onPreExecute() {
             methodName = "findTopicByCriteria";
@@ -254,7 +289,6 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             progressDialog.setMessage("กำลังค้นหาข้อมูลของหาย...");
             progressDialog.show();
         }
-
         @Override
         protected Void doInBackground(Void... params) {
             SoapObject request = new SoapObject(namespace, methodName);
@@ -271,20 +305,17 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             propertyInfo.setValue(spinnerID);
             request.addProperty(propertyInfo);
 
-
-            // TODO: 8/5/2016 add 2 propertyInfo startDate,endDate to criteria
             propertyInfo = new PropertyInfo();
-            propertyInfo.setName("startDate");
-            propertyInfo.setType(Date.class);
-            propertyInfo.setValue(null);
+            propertyInfo.setName("strStartDate");
+            propertyInfo.setType(String.class);
+            propertyInfo.setValue(strStartDate);
             request.addProperty(propertyInfo);
 
             propertyInfo = new PropertyInfo();
-            propertyInfo.setName("endDate");
-            propertyInfo.setType(Date.class);
-            propertyInfo.setValue(null);
+            propertyInfo.setName("strEndDate");
+            propertyInfo.setType(String.class);
+            propertyInfo.setValue(strEndDate);
             request.addProperty(propertyInfo);
-
 
             SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             soapEnvelope.dotNet = true;
@@ -303,7 +334,7 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
                     post.setPostID(responseChild.getPropertyAsString("topicNo"));
                     post.setPostTitle(responseChild.getPropertyAsString("title"));
                     post.setPostPlace(responseChild.getPropertyAsString("buildingNo"));
-                    post.setPostDate(responseChild.getPropertyAsString("dateTime") + "Z");
+                    post.setPostDate(responseChild.getPropertyAsString("dateTime"));
                     if (responseChild.hasProperty("picture")) {
                         post.setPostImage(responseChild.getPropertyAsString("picture"));
                     }
@@ -314,7 +345,6 @@ public class MissingPage extends ActionBarActivity implements DatePickerFragment
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void something) {
             MissingItemCustomAdapter missingItemCustomAdapter = new MissingItemCustomAdapter(getApplicationContext(), posts);

@@ -5,8 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageButton;
-
+import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
     AppMethod appMethod = new AppMethod();
@@ -24,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
 
         appMethod.checkConnectivityStatus(this);
 
-        ImageButton mapBtn = (ImageButton)findViewById(R.id.mapButton);
+        Button mapBtn = (Button)findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
-        ImageButton pplBtn = (ImageButton)findViewById(R.id.peopleButton);
+        Button pplBtn = (Button)findViewById(R.id.peopleButton);
         pplBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
 //                finish();
             }
         });
-        ImageButton missingBtn = (ImageButton)findViewById(R.id.missingButton);
+        Button missingBtn = (Button)findViewById(R.id.missingButton);
         missingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
