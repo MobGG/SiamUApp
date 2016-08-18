@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="สาขา :             " />
+                    android:text="สาขา :            " />
 
                 <TextView
                     android:id="@+id/departmentView"
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="อาคาร :             " />
+                    android:text="อาคาร :          " />
 
                 <TextView
                     android:id="@+id/buildingView"
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="เบอร์ติดต่อภายใน :" />
+                    android:text="เบอร์ติดต่อ :   "     />
 
                 <TextView
                     android:id="@+id/telView"
