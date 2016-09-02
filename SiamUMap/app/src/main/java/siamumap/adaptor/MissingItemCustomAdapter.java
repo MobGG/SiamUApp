@@ -109,7 +109,7 @@ public class MissingItemCustomAdapter extends BaseAdapter {
                 options.inJustDecodeBounds = true;
                 options.inPurgeable = true;
                 byte[] decodedString = Base64.decode(mPost.getPostImage(), Base64.DEFAULT);
-                options.inSampleSize = appMethod.calculateInSampleSize(options, 64, 64);
+                options.inSampleSize = appMethod.calculateInSampleSize(options, 20, 20);
                 options.inJustDecodeBounds = false;
                 Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, options);
                 return bitmap;

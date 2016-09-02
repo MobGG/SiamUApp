@@ -149,22 +149,22 @@ public class PeopleResultPage extends ActionBarActivity {
             } else {
                 imageView.setImageResource(R.drawable.no_picture);
             }
-            if (people.getPeopleBuilding() == null) {
+            if (people.getPeopleBuilding() == null || people.getPeopleBuilding().isEmpty()) {
                 buildingView.setText("-");
             } else {
                 buildingView.setText(people.getPeopleBuilding());
             }
-            if (people.getPeopleRoom() == null) {
+            if (people.getPeopleRoom() == null || people.getPeopleRoom().isEmpty()) {
                 roomView.setText("ไม่มีห้องพัก");
             } else {
                 roomView.setText(people.getPeopleRoom());
             }
-            if (people.getPeopleTel() == null) {
+            if (people.getPeopleTel() == null || people.getPeopleTel().isEmpty()) {
                 telView.setText("-");
             } else {
                 telView.setText(people.getPeopleTel());
             }
-            if (people.getPeopleEmail() == null) {
+            if (people.getPeopleEmail() == null || people.getPeopleEmail().isEmpty()) {
                 emailView.setText("-");
             } else {
                 emailView.setText(people.getPeopleEmail());

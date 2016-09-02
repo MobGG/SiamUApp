@@ -174,7 +174,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:text="ไม่พบของหายในวันนี้"
+            android:text="ไม่พบของหาย"
             android:textSize="20dp"
             android:textStyle="bold" />
 

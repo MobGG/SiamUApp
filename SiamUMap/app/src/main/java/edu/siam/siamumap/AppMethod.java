@@ -25,10 +25,10 @@ public class AppMethod {
     }
 
     public String setWebserviceURL() {
-        //  connection always close when use 3bb ip
-//        String webserviceUrl = "http://192.168.43.80:8254/Service.asmx"; // all code work normally by share 3bb ip to wifi
-//        String webserviceUrl = "http://10.255.20.219:50129/Service.asmx";
-        String webserviceUrl = "http://192.168.137.1:50667/Service.asmx";
+//          connection always close when use 3bb ip
+//          String webserviceUrl = "http://192.168.43.80:8254/Service.asmx"; // all code work normally by share 3bb ip to wifi
+//        String webserviceUrl = "http://192.168.43.235:50667/Service.asmx";
+        String webserviceUrl = "http://192.168.137.1:50667/Service.asmx"; // home share wifi
         return webserviceUrl;
     }
 
